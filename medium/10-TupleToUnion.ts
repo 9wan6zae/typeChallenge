@@ -22,6 +22,7 @@
 /* _____________ Your Code Here _____________ */
 
 type TupleToUnion<T extends readonly unknown[]> = T[number]
+type TupleToUnionUsingInfer<T> = T extends [infer First, ...infer Rest] ? First | TupleToUnion<Rest> : never
 
 
 /* _____________ Test Cases _____________ */
