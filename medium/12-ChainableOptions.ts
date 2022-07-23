@@ -40,9 +40,23 @@
 
 /* _____________ Your Code Here _____________ */
 
+type Merge<T, U> = {
+  [P in Exclude<keyof T, keyof U>]: T[P]
+} & {
+  [G in keyof U]: U[G]
+}
+
 type Chainable<T = {}> = {
-  option<K extends string, V>(key: K, value: V): Chainable<T & Record<K, V>>
+  option<K extends string, V>(key: K, value: V): Chainable<Merge<T, Record<K, V>>>
   get(): T
+}
+
+type T1 = {
+  name: number
+}
+
+type T2 = {
+  name: string
 }
 
 
@@ -59,12 +73,17 @@ const result1 = a
 
 const result2 = a
   .option('name', 'another name')
-  .option('name', 'last name')
+  .get()
+
+const result3 = a
+  .option('name', 'another name')
+  .option('name', 123)
   .get()
 
 type cases = [
   Expect<Alike<typeof result1, Expected1>>,
   Expect<Alike<typeof result2, Expected2>>,
+  Expect<Alike<typeof result3, Expected3>>,
 ]
 
 type Expected1 = {
@@ -77,6 +96,10 @@ type Expected1 = {
 
 type Expected2 = {
   name: string
+}
+
+type Expected3 = {
+  name: number
 }
 
 
